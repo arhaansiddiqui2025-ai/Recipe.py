@@ -9,8 +9,7 @@ st.write("Tell me what ingredients you have, and I will generate a recipe for yo
 
 # 2. API Key Setup
 # It is best practice to use Streamlit's secrets for security
-api_k= api_key = st.secrets[pip install -U google-genai
-]
+api_k= api_key = st.secrets "pip install -U google-genai"
 
 # 3. User Input
 ingredients = st.text_area("List your ingredients (e.g., tomatoes, garlic, pasta, chicken):")
