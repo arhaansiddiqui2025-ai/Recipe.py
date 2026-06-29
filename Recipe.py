@@ -1,6 +1,5 @@
 import streamlit as st
 from google import genai
-import os
 
 # 1. Page Configuration
 st.set_page_config(page_title="Arhaan's Recipe Chef", page_icon="👨‍🍳")
@@ -9,16 +8,20 @@ st.write("Tell me what ingredients you have, and I will generate a recipe for yo
 
 # 2. API Key Setup
 # It is best practice to use Streamlit's secrets for security
-api_k= api_key = st.secrets["pip install -U google-genai"]
+if "GEMINI_API_KEY" in st.secrets:
+    api_key = st.secrets["GEMINI_API_KEY"]
+else:
+    api_key = st.sidebar.text_input("Enter your Gemini API Key", type="password")
 
 # 3. User Input
 ingredients = st.text_area("List your ingredients (e.g., tomatoes, garlic, pasta, chicken):")
 
 if st.button("Generate Recipe"):
-
-    if not ingredients:
+    if not api_key:
+        st.error("Please enter your Gemini API Key in the sidebar.")
+    elif not ingredients:
         st.warning("Please enter some ingredients first.")
-    elif:
+    else:
         try:
             # 4. Connecting to Gemini
             client = genai.Client(api_key=api_key)
@@ -33,5 +36,7 @@ if st.button("Generate Recipe"):
                 # 5. Display Result
                 st.markdown("### Your Recipe:")
                 st.write(response.text)
+        except ValueError:
+            st.error("Invalid API Key format. Please check your Gemini API Key.")
         except Exception as e:
             st.error(f"An error occurred: {e}")
