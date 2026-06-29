@@ -18,7 +18,7 @@ if st.button("Generate Recipe"):
 
     if not ingredients:
         st.warning("Please enter some ingredients first.")
-    elif:
+    elif
         try:
             # 4. Connecting to Gemini
             client = genai.Client(api_key=api_key)
