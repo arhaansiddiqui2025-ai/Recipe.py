@@ -15,11 +15,10 @@ api_k= api_key = st.secrets["pip install -U google-genai"]
 ingredients = st.text_area("List your ingredients (e.g., tomatoes, garlic, pasta, chicken):")
 
 if st.button("Generate Recipe"):
-    if not api_key:
-        st.error("pip install -U google-genai")
-    elif not ingredients:
+
+    if not ingredients:
         st.warning("Please enter some ingredients first.")
-    else:
+    elif:
         try:
             # 4. Connecting to Gemini
             client = genai.Client(api_key=api_key)
