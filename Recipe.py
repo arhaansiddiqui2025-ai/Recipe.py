@@ -16,7 +16,7 @@ ingredients = st.text_area("List your ingredients (e.g., tomatoes, garlic, pasta
 
 if st.button("Generate Recipe"):
     if not api_key:
-        st.error("Please enter your Gemini API Key in the sidebar.")
+        st.error("pip install -U google-genai")
     elif not ingredients:
         st.warning("Please enter some ingredients first.")
     else:
