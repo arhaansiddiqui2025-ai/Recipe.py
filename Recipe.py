@@ -1,44 +1,36 @@
 import streamlit as st
+import pandas as pd
 
-# A local "Database" of recipes
-# You can expand this list as much as you want!
-recipe_db = [
-    {
-        "name": "Paneer Butter Masala",
-        "ingredients": ["paneer", "butter", "tomato", "onion", "cream"],
-        "instructions": "1. Sauté onions and tomatoes. 2. Blend into a paste. 3. Add butter and paneer. 4. Cook until soft."
-    },
-    {
-        "name": "Egg Omelette",
-        "ingredients": ["egg", "onion", "pepper", "salt"],
-        "instructions": "1. Whisk eggs with salt and pepper. 2. Add chopped onions. 3. Fry on a hot pan."
-    },
-    {
-        "name": "Veg Sandwich",
-        "ingredients": ["bread", "butter", "potato", "onion"],
-        "instructions": "1. Boil and mash potatoes. 2. Apply butter on bread. 3. Stuff potatoes and toast."
-    }
-]
+# Load the data
+@st.cache_data # This makes the app load the file only once for speed
+def load_data():
+    return pd.read_csv("recipes.csv")
 
-st.title("🍳 Offline Recipe Finder")
-st.write("Enter the ingredients you have, and I'll find a matching recipe.")
+st.set_page_config(page_title="Arhaan's Recipe Finder", page_icon="🌍")
+st.title("🌍 Arhaan's Recipe Finder")
 
-# User Input
-user_input = st.text_input("Enter ingredients (e.g., egg, onion):")
+df = load_data()
+
+user_input = st.text_input("Enter ingredients (comma separated):")
 
 if user_input:
-    # Convert input to a list of ingredients
     user_ingredients = [i.strip().lower() for i in user_input.split(",")]
     
-    st.write("---")
+    # Logic to calculate matches
+    def count_matches(recipe_ingredients):
+        recipe_list = [i.strip().lower() for i in recipe_ingredients.split(",")]
+        return len([i for i in user_ingredients if i in recipe_list])
+
+    # Calculate scores
+    df['score'] = df['ingredients'].apply(count_matches)
     
-    found_recipe = False
-    for recipe in recipe_db:
-        # Check if ALL user ingredients are present in the recipe's ingredient list
-        if all(item in recipe["ingredients"] for item in user_ingredients):
-            st.success(f"### You can make: {recipe['name']}")
-            st.write(f"**Instructions:** {recipe['instructions']}")
-            found_recipe = True
-            
-    if not found_recipe:
-        st.warning("No perfect match found. Try fewer ingredients!")
+    # Filter and Sort
+    results = df[df['score'] > 0].sort_values(by='score', ascending=False)
+
+    if not results.empty:
+        for index, row in results.iterrows():
+            with st.expander(f"{row['name']} ({row['score']} match)"):
+                st.write(f"**Ingredients:** {row['ingredients']}")
+                st.write(f"**Instructions:** {row['instructions']}")
+    else:
+        st.warning("No recipes found. Try different ingredients!")
