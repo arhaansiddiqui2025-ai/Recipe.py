@@ -9,9 +9,9 @@ st.write("Tell me what ingredients you have, and I will generate a recipe for yo
 # 2. API Key Setup
 # It is best practice to use Streamlit's secrets for security
 if "GEMINI_API_KEY" in st.secrets:
-    api_key = st.secrets["GEMINI_API_KEY"]
+    api_key = st.secrets["pip install -U google-genai"]
 else:
-    api_key = st.sidebar.text_input("Enter your Gemini API Key", type="password")
+    api_key = st.sidebar.text_input("pip install -U google-genai", type="password")
 
 # 3. User Input
 ingredients = st.text_area("List your ingredients (e.g., tomatoes, garlic, pasta, chicken):")
